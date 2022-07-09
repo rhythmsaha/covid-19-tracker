@@ -9,6 +9,7 @@ import {
   LineElement,
   Title,
   Tooltip,
+  Filler,
   Legend,
 } from "chart.js";
 
@@ -21,6 +22,7 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
+  Filler,
   Legend
 );
 
@@ -30,29 +32,28 @@ export const options = {
     legend: {
       position: "top",
     },
-    title: {
-      display: true,
-      text: "Chart.js Line Chart",
-    },
   },
 };
 
 const LineGraph = () => {
   const [data, setData] = useState({});
 
-  const buildChartData = (data, caseTypes = "cases") => {
+  const buildChartData = (data) => {
     const chartData = [];
     let lastDataPoint;
 
-    for (let date in data.cases) {
-      if (lastDataPoint) {
+    for (let date in data) {
+      if (lastDataPoint !== undefined) {
+        const num = data[date] - lastDataPoint;
         const newDataPoint = {
           x: date,
-          y: data[caseTypes][date] - lastDataPoint,
+          y: num > 0 ? num : 0,
         };
+
         chartData.push(newDataPoint);
       }
-      lastDataPoint = data[caseTypes][date];
+
+      lastDataPoint = data[date];
     }
 
     return chartData;
@@ -60,35 +61,68 @@ const LineGraph = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await fetch("https://disease.sh/v3/covid-19/historical/all?lastdays=60")
+      await fetch("https://disease.sh/v3/covid-19/historical/all?lastdays=120")
         .then((res) => res.json())
         .then((data) => {
-          const chartData = buildChartData(data);
-          setData(chartData);
+          const caseChartData = buildChartData(data.cases);
+          const recoveredChartData = buildChartData(data.recovered);
+          const deathsData = buildChartData(data.deaths);
+          setData((prev) => ({
+            cases: caseChartData,
+            recovered: recoveredChartData,
+            deaths: deathsData,
+          }));
         });
     };
 
     fetchData();
   }, []);
 
-  console.log(data);
-
   return (
-    <div>
-      <h1>I am a graph</h1>
-
+    <div className="space-y-8">
       <Line
         data={{
           datasets: [
             {
+              id: "cases",
               label: "Cases",
-              backgroundColor: "rgba(204, 16, 52, 0.5)",
-              borderColor: "#cc1034",
-              data: data,
+              backgroundColor: "blue",
+              borderColor: "blue",
+              data: data.cases,
+              fill: true,
             },
           ],
         }}
-        // options={options}
+        options={options}
+      />
+      <Line
+        data={{
+          datasets: [
+            {
+              id: "Deaths",
+              label: "Deaths",
+              backgroundColor: "red",
+              borderColor: "red",
+              data: data.deaths,
+              fill: true,
+            },
+          ],
+        }}
+        options={options}
+      />
+      <Line
+        data={{
+          datasets: [
+            {
+              id: "Recovered",
+              label: "Recovered",
+              backgroundColor: "green",
+              borderColor: "green",
+              data: data.recovered,
+            },
+          ],
+        }}
+        options={options}
       />
     </div>
   );

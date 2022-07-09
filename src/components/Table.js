@@ -2,7 +2,7 @@ import React from "react";
 
 const Table = ({ countries }) => {
   return (
-    <div className="my-5 table_wrapper h-96 overflow-auto pr-4">
+    <div className="my-5 table_wrapper h-96 overflow-auto pr-2">
       <table className="table table-auto  w-full text-left rounded-md">
         <tbody className="">
           {countries.map(({ country, cases }) => (
