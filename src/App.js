@@ -5,17 +5,30 @@ import InfoBox from "./components/InfoBox";
 import LineGraph from "./components/LineGraph";
 import Map from "./components/Map";
 import Table from "./components/Table";
+import "leaflet/dist/leaflet.css";
 
 function App() {
   const [country, setCountry] = useState("worldwide");
   const [countryInfo, setCountryInfo] = useState({});
   const [tableData, setTableData] = useState([]);
+  const [mapCenter, setMapCenter] = useState([0, 0]);
+  const [mapzoom, setMapzoom] = useState(2);
+  const [mapCountries, setMapCountries] = useState([]);
 
-  // console.log(countryInfo);
-
-  const countryChangeHandler = async (e) => {
+  const countryChangeHandler = async (e, data) => {
     const countryCode = e.target.value;
     setCountry(countryCode);
+
+    if (countryCode !== "worldwide") {
+      const cc = data.filter((c) => c.countryInfo.iso2 === countryCode);
+      const latlong = cc[0].countryInfo;
+      const cntr = [latlong.lat, latlong.long];
+      setMapCenter(cntr);
+      setMapzoom(4);
+    } else {
+      setMapCenter([0, 0]);
+      setMapzoom(2);
+    }
   };
 
   useEffect(() => {
@@ -35,6 +48,7 @@ function App() {
     <div className="grid lg:grid-cols-12 p-6 gap-10 max-w-7xl mx-auto">
       <div className="lg:col-span-8">
         <Header
+          setMapCountries={setMapCountries}
           country={country}
           onCountryChange={countryChangeHandler}
           setTableData={setTableData}
@@ -58,7 +72,7 @@ function App() {
           />
         </div>
 
-        <Map />
+        <Map zoom={mapzoom} center={mapCenter} countries={mapCountries} />
       </div>
 
       <div className="lg:col-span-4 shadow-md w-full rounded-xl overflow-hidden bg-white">

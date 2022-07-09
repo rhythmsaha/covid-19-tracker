@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { sortData } from "../helper/utils";
 
-const Header = ({ country, onCountryChange, setTableData }) => {
+const Header = ({
+  country,
+  onCountryChange,
+  setTableData,
+  setMapCountries,
+}) => {
   const [countries, setCountries] = useState([]);
 
   useEffect(() => {
@@ -12,11 +17,13 @@ const Header = ({ country, onCountryChange, setTableData }) => {
           const countries = data.map((country) => ({
             name: country.country,
             value: country.countryInfo.iso2,
+            countryInfo: country.countryInfo,
           }));
 
           const sortedData = sortData(data);
           setTableData(sortedData);
           setCountries(countries);
+          setMapCountries(data);
         });
     };
 
@@ -33,7 +40,7 @@ const Header = ({ country, onCountryChange, setTableData }) => {
           id="countries"
           className="border outline-none p-3 w-40 block:"
           value={country}
-          onChange={onCountryChange}
+          onChange={(e) => onCountryChange(e, countries)}
         >
           <option value="worldwide">Worldwide</option>
           {countries.map(({ name, value }) => (

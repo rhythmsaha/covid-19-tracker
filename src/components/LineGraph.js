@@ -14,7 +14,6 @@ import {
 } from "chart.js";
 
 import { Line } from "react-chartjs-2";
-
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -86,8 +85,8 @@ const LineGraph = () => {
             {
               id: "cases",
               label: "Cases",
-              backgroundColor: "blue",
-              borderColor: "blue",
+              backgroundColor: "rgba(53, 162, 235, 0.5)",
+              borderColor: "rgba(53, 162, 235, 0.5)",
               data: data.cases,
               fill: true,
             },
@@ -95,20 +94,21 @@ const LineGraph = () => {
         }}
         options={options}
       />
+
       <Line
         data={{
           datasets: [
             {
               id: "Deaths",
               label: "Deaths",
-              backgroundColor: "red",
-              borderColor: "red",
+              backgroundColor: "rgba(255, 99, 132, 0.5)",
+              borderColor: "rgba(255, 99, 132, 0.5)",
               data: data.deaths,
               fill: true,
             },
           ],
         }}
-        options={options}
+        // options={options}
       />
       <Line
         data={{
@@ -116,13 +116,14 @@ const LineGraph = () => {
             {
               id: "Recovered",
               label: "Recovered",
-              backgroundColor: "green",
-              borderColor: "green",
+              backgroundColor: "rgba(0, 255, 110, 0.2)",
+              borderColor: "rgb(0, 255, 110, 0.2)",
               data: data.recovered,
+              fill: true,
             },
           ],
         }}
-        options={options}
+        // options={options}
       />
     </div>
   );
