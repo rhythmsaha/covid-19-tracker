@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import { sortData } from "../helper/utils";
 
-const Header = ({ country, onCountryChange }) => {
+const Header = ({ country, onCountryChange, setTableData }) => {
   const [countries, setCountries] = useState([]);
 
   useEffect(() => {
@@ -12,11 +13,15 @@ const Header = ({ country, onCountryChange }) => {
             name: country.country,
             value: country.countryInfo.iso2,
           }));
+
+          const sortedData = sortData(data);
+          setTableData(sortedData);
           setCountries(countries);
         });
     };
 
     getCountriesData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

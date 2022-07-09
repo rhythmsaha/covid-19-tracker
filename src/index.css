@@ -5,6 +5,19 @@
 @layer base {
   body {
     @apply bg-[#f5f6fa];
-    /* @apply bg-gray-100; */
   }
+}
+
+.table_wrapper::-webkit-scrollbar {
+  width: 4px;
+}
+
+.table_wrapper::-webkit-scrollbar-track {
+  background: rgba(211, 211, 211, 0.15);
+}
+
+.table_wrapper::-webkit-scrollbar-thumb {
+  background-color: lightgray;
+  border-radius: 5px;
+  /* outline: 1px solid slategrey; */
 }
